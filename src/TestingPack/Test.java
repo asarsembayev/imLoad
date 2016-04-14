@@ -31,7 +31,7 @@ import javax.swing.*;
 
 
 public class Test extends JFrame implements ActionListener, KeyEventDispatcher, MouseListener{
-	String imString = "src/img/3.png";
+	String imString = "src/img/100.png";
 	
 	JFrame frame;
 	public Panel rootPanel = new Panel(); //previously m_RootPane
@@ -93,12 +93,6 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		//countDist();	//FOR ASTAR
 		//addMouseListener(this);
 		
-		try {
-			File output = new File("new.png");
-			ImageIO.write(bImage, "png", output);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 
 	}
 	
@@ -165,9 +159,11 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				}
 			}
 		}
+		System.out.println("wallPositions " + wallPositions);
 		return wallPositions;
 	}
 	
+
 	private List<Point2D> createWallOfset(){
 		for(int i = 0; i<wallPositions.size();i++){
 			int newRGB = 230;
@@ -277,6 +273,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		}
 		//System.out.println("wallpoitions size " + wallPositions.size());
 		//System.out.println("walloffset size " + wallOfset.size());
+		System.out.println("wallOfset "  + wallOfset);
 		return wallOfset;		
 	}
 	
@@ -342,7 +339,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		
 		this.mazePanel.addMouseListener(this);
 		
-		this.timer = new Timer(100, this);
+		this.timer = new Timer(200, this);
 		this.timer.start();
 	}
 	//end of init maze
@@ -355,6 +352,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 			this.robot = new TestRobot();
 			this.mazePanel.add(this.robot);
 			this.mazePanel.setComponentZOrder(robot, 0);
+			//robotPosX = robot.getX(); robotPosY = robot.getY();
 			robotLocation = new Point(robot.getX(), robot.getY());
 		}
 	}
@@ -362,8 +360,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 
 	@Override
 	public void actionPerformed(ActionEvent e) 	{
-		if (e.getSource() == this.timer)
-		{
+		if (e.getSource() == this.timer){		
 			if (this.robot.isStopped()) {
 				return;
 			}
@@ -507,7 +504,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	private void drawLineFromStartToFinish(){
 		Graphics2D g2 = bImage.createGraphics();
 		g2.setColor(Color.RED);
-		g2.drawLine(robotPosX, robotPosY, xFinish, yFinish);
+		g2.drawLine(robotLocation.x, robotLocation.y, xFinish, yFinish);
 	}
 	
 	private void addFinal(){
@@ -521,7 +518,28 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	}
 	
 	public void aStar(List<Point2D> openList, Point robotLocation, Point finishPoint){
-		TestAstar ta = new TestAstar(openList, robotLocation, finishPoint);
+		System.out.println("Started");
+		TestAstar ta = new TestAstar(openList, robotLocation, finishPoint, wallOfset);
+		drawPath(ta.pathList);
+		System.out.println("Finished");
+	}
+	
+	public void drawPath(List<Point2D> pathList){
+		for(int i=0; i<pathList.size(); i++){
+			int x = (int) pathList.get(i).getX(); int y = (int) pathList.get(i).getY();
+			bImage.setRGB(x, y, 231);
+		}
+		exportImage();
+	}
+	
+	private void exportImage(){
+		try {
+			File output = new File("new22.png");
+			ImageIO.write(bImage, "png", output);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -536,6 +554,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 			numFinalPoints ++;
 			clickNum++;
 			aStar(openList, robotLocation, finishPoint);
+			
 		}
 
 	}
