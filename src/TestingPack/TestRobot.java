@@ -23,7 +23,7 @@ public class TestRobot
 		ImageIcon icon = new ImageIcon(TestRobot.class.getResource("Robot.png"));
 		if (icon == null) {}
 		setIcon(icon);
-		setBounds(10, 10, icon.getIconWidth(), icon.getIconHeight());
+		setBounds(30, 102, icon.getIconWidth(), icon.getIconHeight());
 	}
 	
 	public void turnLeft()

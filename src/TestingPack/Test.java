@@ -31,7 +31,7 @@ import javax.swing.*;
 
 
 public class Test extends JFrame implements ActionListener, KeyEventDispatcher, MouseListener{
-	String imString = "src/img/100.png";
+	String imString = "src/img/3.png";
 	
 	JFrame frame;
 	public Panel rootPanel = new Panel(); //previously m_RootPane
@@ -527,7 +527,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	public void drawPath(List<Point2D> pathList){
 		for(int i=0; i<pathList.size(); i++){
 			int x = (int) pathList.get(i).getX(); int y = (int) pathList.get(i).getY();
-			bImage.setRGB(x, y, 231);
+			bImage.setRGB(x, y, 30);
 		}
 		exportImage();
 	}
