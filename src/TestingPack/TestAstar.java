@@ -46,8 +46,8 @@ public class TestAstar {
 				double gval1 = countGvalue(neigh1.x, neigh1.y);		double gval2 = countGvalue(neigh2.x, neigh2.y);			double gval3 = countGvalue(neigh3.x, neigh3.y);		double gval4 = countGvalue(neigh4.x, neigh4.y);
 				double gval5 = countGvalue(neigh5.x, neigh5.y);		double gval6 = countGvalue(neigh6.x, neigh6.y);		double gval7 = countGvalue(neigh7.x, neigh7.y);		double gval8 = countGvalue(neigh8.x, neigh8.y);
 				
-				double fval1 = hval1 + gval1;			System.out.println("fval 1 " + fval1);		double fval2 = hval2 + gval2;	System.out.println("fval 2 " + fval2);			double fval3 = hval3 + gval3;		System.out.println("fval 3 " + fval3);		double fval4 = hval4 + gval4;System.out.println("fval 4 " + fval4);
-				double fval5 = hval5 + gval5;		System.out.println("fval 5 " + fval5);		double fval6 = hval6 + gval6;System.out.println("fval 6 " + fval6);			double fval7 = hval7 + gval7;		System.out.println("fval 7 " + fval7);		double fval8 = hval8 + gval8;System.out.println("fval 8 " + fval8);
+				double fval1 = hval1 + gval1;	double fval2 = hval2 + gval2;	double fval3 = hval3 + gval3;	double fval4 = hval4 + gval4;
+				double fval5 = hval5 + gval5;	double fval6 = hval6 + gval6;	double fval7 = hval7 + gval7;	double fval8 = hval8 + gval8;
 				
 				hValsArr[0] = hval1; hValsArr[1] = hval2; hValsArr[2] = hval3; hValsArr[3] = hval4; hValsArr[4] = hval5; hValsArr[5] = hval6; hValsArr[6] = hval7; hValsArr[7] = hval8;
 				fValsArr[0] = fval1;	fValsArr[1] = fval2;	fValsArr[2] = fval3;	fValsArr[3] = fval4;	fValsArr[4] = fval5;	fValsArr[5] = fval6;	fValsArr[6] = fval7;	fValsArr[7] = fval8;
@@ -62,12 +62,11 @@ public class TestAstar {
 						tempFvalues.add(fValsArr[i]);
 					}
 				}
-				System.out.println("arrays size" + tempNeighbors.size() + " complete array is " + tempNeighbors.toString());
-				System.out.println(" tempvals size " + tempFvalues.size()+ " tempvals " + tempFvalues.toString());
+				//System.out.println("arrays size" + tempNeighbors.size() + " complete array is " + tempNeighbors.toString());
+				//System.out.println(" tempvals size " + tempFvalues.size()+ " tempvals " + tempFvalues.toString());
 				
 				findMin(tempFvalues);
 				min = tempFvalues.get(minInd);
-				System.out.println("min member " + min + " ind " + minInd);
 				
 				//System.out.println("minimum is " + min + " and maximum is " + max);
 				bestNeighbor = new Point(); currentObservedNeighbor = new Point();
@@ -82,15 +81,15 @@ public class TestAstar {
 								double prevNeiHvalue = tempHvalues.get(tempNeighbors.indexOf(bestNeighbor));
 								double currentNeiHvalue = tempHvalues.get(looper);
 								if(prevNeiHvalue<currentNeiHvalue){
-									System.out.println(" current H is higher ");
+									//System.out.println(" current H is higher ");
 								} else if(prevNeiHvalue == currentNeiHvalue && pathList.contains(currentObservedNeighbor)){
-									System.out.println("min is " + min + " current is " + currentNeighValue);
+									//System.out.println("min is " + min + " current is " + currentNeighValue);
 									bestNeighbor = bestNeighbor;
 									lastPoint = bestNeighbor;
 									//pathList.add(bestNeighbor);
 								}
 								else if (prevNeiHvalue>currentNeiHvalue){
-									System.out.println("min is " + min + " current is " + currentNeighValue);
+									//System.out.println("min is " + min + " current is " + currentNeighValue);
 									bestNeighbor = currentObservedNeighbor;
 									lastPoint = bestNeighbor;
 									pathList.add(currentObservedNeighbor);
@@ -111,7 +110,7 @@ public class TestAstar {
 								lastPoint = bestNeighbor;
 								pathList.add(currentObservedNeighbor);								
 							}
-							System.out.println("min is " + min + " current is " + currentNeighValue);
+							//System.out.println("min is " + min + " current is " + currentNeighValue);
 							
 						}
 						else if(currentNeighValue!=min){
@@ -172,10 +171,9 @@ public class TestAstar {
 				lastPoint = bestNeighbor;
 				pathList.add(bestNeighbor);
 				temporaryFValsOfNeighbors.clear();*/
-				System.out.println("added " + bestNeighbor);
 				if(bestNeighbor.equals(finishPoint)){
 					System.out.println("path is " + pathList.toString());
-					System.out.println("path size " + pathList.size());
+					//System.out.println("path size " + pathList.size());
 					break;
 				}
 				tempNeighbors.clear(); tempFvalues.clear(); tempHvalues.clear();
