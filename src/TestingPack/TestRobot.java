@@ -23,7 +23,7 @@ public class TestRobot
 		ImageIcon icon = new ImageIcon(TestRobot.class.getResource("Robot.png"));
 		if (icon == null) {}
 		setIcon(icon);
-		setBounds(30, 102, icon.getIconWidth(), icon.getIconHeight());
+		setBounds(10, 10, icon.getIconWidth(), icon.getIconHeight());
 	}
 	
 	public void turnLeft()
@@ -98,10 +98,13 @@ public class TestRobot
 		setBounds(x, y, w, h);
 	}
 	
-	public void move()
+	public void move(int d, int e)
 	{
-		int x = getX() + this.m_nStep * this.m_nXDir;
-		int y = getY() + this.m_nStep * this.m_nYDir;
+		//int x = getX() + this.m_nStep * this.m_nXDir;
+		
+		int x = d + this.m_nStep * this.m_nXDir;
+		int y = e + this.m_nStep * this.m_nYDir;
+		//int y = getY() + this.m_nStep * this.m_nYDir;
 		int w = getWidth();
 		int h = getHeight();
 		
