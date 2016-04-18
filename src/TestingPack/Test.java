@@ -49,7 +49,10 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	private List<Point2D> wallPositions = new ArrayList<Point2D>(); 
 	private List<Point2D> wallOfset = new ArrayList<Point2D>();
 	private List<Point2D> openList = new ArrayList<Point2D>();
-	private int offsetDist = 5;
+	
+	public List<Point2D>pathListMain = new ArrayList<Point2D>();
+	
+	private int offsetDist = 10;
 	
 	//private static DrawingObjects object = new DrawingObjects();
 	private int xFinish;
@@ -89,6 +92,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		
 		putInWallsArray();
 		createWallOfset();
+		qudrification();
 		makeTheOpenList();
 		//countDist();	//FOR ASTAR
 		//addMouseListener(this);
@@ -159,14 +163,14 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				}
 			}
 		}
-		System.out.println("wallPositions " + wallPositions);
+		//System.out.println("wallPositions " + wallPositions);
 		return wallPositions;
 	}
 	
 
 	private List<Point2D> createWallOfset(){
 		for(int i = 0; i<wallPositions.size();i++){
-			int newRGB = 230;
+			int newRGB = 240;
 			Point2D p = wallPositions.get(i);
 			Point2D neigh = this.getLocation();
 			int x = (int) p.getX(); int y = (int)p.getY();
@@ -178,7 +182,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					bImage.setRGB(nX, nY, newRGB);
+					//bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			
@@ -188,7 +192,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					bImage.setRGB(nX, nY, newRGB);
+					//bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			
@@ -198,7 +202,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					bImage.setRGB(nX, nY, newRGB);
+					//bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			
@@ -208,7 +212,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					bImage.setRGB(nX, nY, newRGB);
+					//bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			//this part is the end of the borders
@@ -219,61 +223,61 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 			int n1RGB = getRgb(x, y - offsetDist);
 			if(!wallOfset.contains(neigh1) && !wallPositions.contains(neigh1) && n1RGB > blackMaybe){
 				wallOfset.add(neigh1);
-				bImage.setRGB(x, y - offsetDist, newRGB);
+				//bImage.setRGB(x, y - offsetDist, newRGB);
 			}
 			Point2D neigh2 = this.getLocation();
 			neigh2.setLocation(x + offsetDist, y - offsetDist);
 			int n2RGB = getRgb(x + offsetDist, y - offsetDist);
 			if(!wallOfset.contains(neigh2) && !wallPositions.contains(neigh2) && n2RGB > blackMaybe){
 				wallOfset.add(neigh2);
-				bImage.setRGB(x + offsetDist, y - offsetDist, newRGB);
+				//bImage.setRGB(x + offsetDist, y - offsetDist, newRGB);
 			}
 			Point2D neigh3 = this.getLocation();
 			neigh3.setLocation(x + offsetDist, y);
 			int n3RGB = getRgb(x + offsetDist, y);
 			if(!wallOfset.contains(neigh3) && !wallPositions.contains(neigh3) && n3RGB > blackMaybe){
 				wallOfset.add(neigh3);
-				bImage.setRGB(x + offsetDist, y, newRGB);
+				//bImage.setRGB(x + offsetDist, y, newRGB);
 			}
 			Point2D neigh4 = this.getLocation();
 			neigh4.setLocation(x + offsetDist, y + offsetDist);
 			int n4RGB = getRgb(x + offsetDist, y + offsetDist);
 			if(!wallOfset.contains(neigh4) && !wallPositions.contains(neigh4) && n4RGB > blackMaybe){
 				wallOfset.add(neigh4);
-				bImage.setRGB(x + offsetDist, y + offsetDist, newRGB);
+				//bImage.setRGB(x + offsetDist, y + offsetDist, newRGB);
 			}
 			Point2D neigh5 = this.getLocation();
 			neigh5.setLocation(x, y + offsetDist);
 			int n5RGB = getRgb(x, y + offsetDist);
 			if(!wallOfset.contains(neigh5) && !wallPositions.contains(neigh5) && n5RGB > blackMaybe){
 				wallOfset.add(neigh5);
-				bImage.setRGB(x, y + offsetDist, newRGB);
+				//bImage.setRGB(x, y + offsetDist, newRGB);
 			}
 			Point2D neigh6 = this.getLocation();
 			neigh6.setLocation(x - offsetDist, y + offsetDist);
 			int n6RGB = getRgb(x - offsetDist, y + offsetDist);
 			if(!wallOfset.contains(neigh6) && !wallPositions.contains(neigh6) && n6RGB > blackMaybe){
 				wallOfset.add(neigh6);
-				bImage.setRGB(x - offsetDist, y + offsetDist, newRGB);
+				//bImage.setRGB(x - offsetDist, y + offsetDist, newRGB);
 			}
 			Point2D neigh7 = this.getLocation();
 			neigh7.setLocation(x - offsetDist, y);
 			int n7RGB = getRgb(x - offsetDist, y);
 			if(!wallOfset.contains(neigh7) && !wallPositions.contains(neigh7) && n7RGB > blackMaybe){
 				wallOfset.add(neigh7);
-				bImage.setRGB(x - offsetDist, y, newRGB);
+				//bImage.setRGB(x - offsetDist, y, newRGB);
 			}
 			Point2D neigh8 = this.getLocation();
 			neigh8.setLocation(x - offsetDist, y - offsetDist);
 			int n8RGB = getRgb(x - offsetDist, y - offsetDist);
 			if(!wallOfset.contains(neigh8) && !wallPositions.contains(neigh8) && n8RGB > blackMaybe){
 				wallOfset.add(neigh8);
-				bImage.setRGB(x - offsetDist, y - offsetDist, newRGB);
+				//bImage.setRGB(x - offsetDist, y - offsetDist, newRGB);
 			}
 		}
 		//System.out.println("wallpoitions size " + wallPositions.size());
 		//System.out.println("walloffset size " + wallOfset.size());
-		System.out.println("wallOfset "  + wallOfset);
+		//System.out.println("wallOfset "  + wallOfset);
 		return wallOfset;		
 	}
 	
@@ -360,15 +364,23 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 
 	@Override
 	public void actionPerformed(ActionEvent e) 	{
+		
 		if (e.getSource() == this.timer){		
 			if (this.robot.isStopped()) {
 				return;
 			}
-			this.robot.move();
 			
+			//for moving freely uncomment the code bellow
+			//this.robot.move;
+			
+			//if you want to move by the AStar you should use the code bellow
+			for(int i=0; i<pathListMain.size(); i++){
+				this.robot.move((int) pathListMain.get(i).getX(), (int) pathListMain.get(i).getY());
+				System.out.println("X " + pathListMain.get(i).getX() + " Y " + pathListMain.get(i).getY());
+				if(i == pathListMain.size())break;
+			}this.robot.stop();
 
-			boolean bCrashed = false;
-			
+			boolean bCrashed = false;			
 			
 			//BEGINNING OF MY WAY OF WALKING
 			Point2D p1 = this.robot.getLocation();
@@ -386,8 +398,8 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 			p24.setLocation(this.robot.getX() + this.robot.getWidth()/2, this.robot.getY()+this.robot.getHeight());
 			p34.setLocation(this.robot.getX() + this.robot.getWidth(), this.robot.getY()+this.robot.getHeight()/2);
 			p13.setLocation(this.robot.getX() + this.robot.getWidth()/2, this.robot.getY());
-			System.out.println("p1 " + p1 + " p2 " + p2 + " p3 " + p3 + " p4 " + p4);
-			System.out.println("p12 " + p12 + " p24 " + p24 + " p34 " + p34 + " p13 " + p13);
+			//System.out.println("p1 " + p1 + " p2 " + p2 + " p3 " + p3 + " p4 " + p4);
+			//System.out.println("p12 " + p12 + " p24 " + p24 + " p34 " + p34 + " p13 " + p13);
 			
 			try {
 					if(wallOfset.contains(p1)){
@@ -518,10 +530,13 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	}
 	
 	public void aStar(List<Point2D> openList, Point robotLocation, Point finishPoint){
-		System.out.println("Started");
 		TestAstar ta = new TestAstar(openList, robotLocation, finishPoint, wallOfset);
+		pathListMain = ta.pathList;
 		drawPath(ta.pathList);
-		System.out.println("Finished");
+	}
+	
+	public void qudrification(){
+		TestQuadrification tq = new TestQuadrification(bImage, openList, openList, openList);
 	}
 	
 	public void drawPath(List<Point2D> pathList){
@@ -550,7 +565,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		if(clickNum == 1 && numFinalPoints == 0){
 			xFinish = paramMouseEvent.getX(); yFinish = paramMouseEvent.getY();
 			addFinal();
-			drawLineFromStartToFinish();
+			//drawLineFromStartToFinish();
 			numFinalPoints ++;
 			clickNum++;
 			aStar(openList, robotLocation, finishPoint);
