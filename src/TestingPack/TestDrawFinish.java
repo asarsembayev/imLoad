@@ -15,7 +15,7 @@ public class TestDrawFinish {
 	public TestDrawFinish(int x, int y){
 
 		ImageIcon icon = null;
-		icon = new ImageIcon(TestDrawFinish.class.getResource("Circle_Red.png"));
+		icon = new ImageIcon(TestDrawFinish.class.getResource("Circle_Red_small.png"));
 		int w;
 		int h;
 		if (icon == null)
