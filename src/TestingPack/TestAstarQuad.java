@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class TestAstar {
-	List<Point2D>closedList = new ArrayList<Point2D>(); public List<Point2D>pathList = new ArrayList<Point2D>();
+public class TestAstarQuad {
+	List<Point2D>openList; List<Point2D>closedList = new ArrayList<Point2D>(); public List<Point2D>pathList = new ArrayList<Point2D>();
 	HashMap<Double, Point> temporaryFValsOfNeighbors = new HashMap<>(); HashMap<Point, Double> temporaryGvalsOfNeighbors = new HashMap<>();
 	
 	Double[]hValsArr = new Double[8]; Double[]fValsArr = new Double[8]; Point[]neighs = new Point[8]; //?
@@ -24,12 +24,17 @@ public class TestAstar {
 	ArrayList<Double> tempHvalues = new ArrayList<>();
 	ArrayList<Point> tempNeighbors = new ArrayList<>();
 	//constructor
-	public TestAstar(Point robotLocation, Point finishPoint, List<Point2D> wallOfset){
+	public TestAstarQuad(List<Point2D> openList,Point robotLocation, Point finishPoint, List<Point2D> wallOfset){
+		//robotPosX = (int) robotLocation.getX(); robotPosY = (int) robotLocation.getY(); 
 		robotPosX = robotLocation.x; robotPosY = robotLocation.y;
 		lastPoint = robotLocation;
 		xFinish = finishPoint.x; yFinish = finishPoint.y;
+		//System.out.println("robot location " + robotLocation);
+		//System.out.println("finish location " + finishPoint);
 		hValue = countHvalue(robotPosX, robotPosY); gValue = 0;
-	
+		//System.out.println("the distance from robot to finish is " + hValue);
+		//hValue = countDist();
+		
 		while(true){
 				List<Point> TemporaryNeighborsList = new ArrayList<Point>();
 				neigh1 = new Point(lastPoint.x - 1, lastPoint.y - 1); 		neigh2 = new Point(lastPoint.x, lastPoint.y - 1);			neigh3 = new Point(lastPoint.x + 1, lastPoint.y - 1); 		neigh4 = new Point(lastPoint.x + 1, lastPoint.y);
@@ -48,6 +53,8 @@ public class TestAstar {
 				fValsArr[0] = fval1;	fValsArr[1] = fval2;	fValsArr[2] = fval3;	fValsArr[3] = fval4;	fValsArr[4] = fval5;	fValsArr[5] = fval6;	fValsArr[6] = fval7;	fValsArr[7] = fval8;
 				neighs[0] = neigh1;neighs[1] = neigh2;neighs[2] = neigh3;neighs[3] = neigh4;neighs[4] = neigh5;neighs[5] = neigh6;neighs[6] = neigh7;neighs[7] = neigh8;
 				
+				 //double min = neighVals[0]; double max = neighVals[0];
+				
 				for(int i=0; i < neighs.length; i++){
 					if(!wallOfset.contains(neighs[i])){
 						tempNeighbors.add(neighs[i]);
@@ -55,10 +62,13 @@ public class TestAstar {
 						tempFvalues.add(fValsArr[i]);
 					}
 				}
-
+				//System.out.println("arrays size" + tempNeighbors.size() + " complete array is " + tempNeighbors.toString());
+				//System.out.println(" tempvals size " + tempFvalues.size()+ " tempvals " + tempFvalues.toString());
+				
 				findMin(tempFvalues);
 				min = tempFvalues.get(minInd);
 				
+				//System.out.println("minimum is " + min + " and maximum is " + max);
 				bestNeighbor = new Point(); currentObservedNeighbor = new Point();
 				int minNeiSum = 0;
 				for(int looper = 0; looper<tempFvalues.size(); looper++){
@@ -106,7 +116,61 @@ public class TestAstar {
 						else if(currentNeighValue!=min){
 							closedList.add(currentObservedNeighbor);
 						}
+
+					
+
+					
+/*					if(currentNeighValue == min && wallOfset.contains(currentObservedNeighbor)){
+							for(int ii = 0; ii<neighVals.length; ii++){
+								if(wallOfset.contains(temporaryFValsOfNeighbors.get( neighVals[ii] ))){
+									System.out.println(" yes it is");
+									minNflag++;
+								}else if(!wallOfset.contains(temporaryFValsOfNeighbors.get( neighVals[ii] ))){
+									break;
+								}
+							}
+							minNflag++;
+							min = neighVals[minNflag];
+							bestNeighbor = temporaryFValsOfNeighbors.get(min);
+							lastPoint = bestNeighbor;
+						
+						else if(currentNeighValue != min){
+							closedList.add(openList.get(ind));
+							openList.remove(ind);
+						}						
+						System.out.println("contains ");
+					}
+					if(!wallOfset.contains(currentObservedNeighbor)){
+						if(currentNeighValue == min && ind != -1){
+							bestNeighbor = temporaryFValsOfNeighbors.get(currentNeighValue);
+							gValue = temporaryGvalsOfNeighbors.get(bestNeighbor);
+							//System.out.println("Found it "+openList.contains(bestNeighbor));
+							lastPoint = bestNeighbor;
+							openList.remove(ind);
+							//System.out.println("Removed it ");
+						}
+						else if(currentNeighValue != min && ind != -1){
+												System.out.println("openList.get(ind) " + openList.get(ind));
+							System.out.println("openList.get(ind) " + closedList.contains(openList.get(ind)));
+												System.out.println("openList.get(ind).equals(bestNeighbor) " + openList.get(ind).equals(bestNeighbor)); //check which one is right 101 or 102 line
+							System.out.println("openList.get(ind).equals(bestNeighbor) " + (openList.get(ind) == bestNeighbor));
+							if(!closedList.contains(openList.get(ind)) && !openList.get(ind).equals(bestNeighbor)){
+								closedList.add(openList.get(ind));
+							}
+							//System.out.println("the size of closedList after is " + closedList.size());
+							openList.remove(ind);
+						}
+					}*/
+					
+					
 				}//end of loop
+
+				//System.out.println("the size of openList after is " + openList.size());
+				//System.out.println("best nei is " + bestNeighbor + " dist is " + min);
+				/*bestNeighbor = temporaryFValsOfNeighbors.get(min);
+				lastPoint = bestNeighbor;
+				pathList.add(bestNeighbor);
+				temporaryFValsOfNeighbors.clear();*/
 				if(bestNeighbor.equals(finishPoint)){
 					System.out.println("path is " + pathList.toString());
 					//System.out.println("path size " + pathList.size());
@@ -126,6 +190,26 @@ public class TestAstar {
 		}
 		return minInd;
 	}
+	
+/*	private ArrayList<Integer> findMinBetweenTwo(Double[] fValsArr, double tempmin){
+		double min = fValsArr[0];
+		for(int i = 0; i<fValsArr.length; i++){
+			if(fValsArr[i] != tempmin){
+				if(fValsArr[i]<=min){
+					min = fValsArr[i];
+					
+					if(minIndices.size()>2) {
+						minIndices.clear();
+						
+						//minIndices.remove(i-1);
+					}
+					minIndices.add(i);
+					System.out.println("issss " + minIndices.toString());
+				}				
+			}
+		}
+		return minIndices;
+	}*/
 	
 	private double countGvalue(int x, int y){
 		double gVal = Math.sqrt(  

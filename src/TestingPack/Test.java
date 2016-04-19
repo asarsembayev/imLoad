@@ -40,6 +40,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	public JLabel mazeLabel = new JLabel(); //previously m_lblMaze
 	public Timer timer = null; //previously m_Timer
 	public TestRobot robot = null;				//initRobot() //previously m_Robot
+	public Dimension robSize;
 	
 	public Vector vetorObjects = new Vector();	//addObjectMark() //previously m_vecObjects
 	public JButton exitButton = new JButton();	//initStatus() //previously m_btnExit
@@ -92,7 +93,6 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		
 		putInWallsArray();
 		createWallOfset();
-		qudrification();
 		makeTheOpenList();
 		//countDist();	//FOR ASTAR
 		//addMouseListener(this);
@@ -358,6 +358,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 			this.mazePanel.setComponentZOrder(robot, 0);
 			//robotPosX = robot.getX(); robotPosY = robot.getY();
 			robotLocation = new Point(robot.getX(), robot.getY());
+			robSize = this.robot.getSize();
 		}
 	}
 	//end of Init of robot
@@ -529,14 +530,36 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		finishPoint = new Point(xFinish, yFinish);
 	}
 	
-	public void aStar(List<Point2D> openList, Point robotLocation, Point finishPoint){
-		TestAstar ta = new TestAstar(openList, robotLocation, finishPoint, wallOfset);
+	public void aStar(Point robotLocation, Point finishPoint){
+		TestAstar ta = new TestAstar(robotLocation, finishPoint, wallOfset);
 		pathListMain = ta.pathList;
 		drawPath(ta.pathList);
 	}
 	
-	public void qudrification(){
-		TestQuadrification tq = new TestQuadrification(bImage, openList, openList, openList);
+	public void quadrification(){
+		TestQuadrification tq = new TestQuadrification(bImage, openList, wallPositions, wallOfset, robSize, robotLocation, finishPoint);
+		drawPath2(tq.quadPathList);
+	}
+	
+	public void drawPath2(List<Point2D> quadPathList){
+		Graphics2D g2 = bImage.createGraphics();
+		g2.setColor(Color.RED);		
+		for(int i=0; i<quadPathList.size(); i++){
+			int x = (int) quadPathList.get(i).getX(); int y = (int) quadPathList.get(i).getY();
+			bImage.setRGB(x, y, 180);
+			g2.drawLine(x, y, xFinish, yFinish);
+		}
+		exportImage2();
+	}
+	
+	private void exportImage2(){
+		try {
+			File output = new File("new33.png");
+			ImageIO.write(bImage, "png", output);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 	}
 	
 	public void drawPath(List<Point2D> pathList){
@@ -568,8 +591,8 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 			//drawLineFromStartToFinish();
 			numFinalPoints ++;
 			clickNum++;
-			aStar(openList, robotLocation, finishPoint);
-			
+			aStar(robotLocation, finishPoint);
+			quadrification();
 		}
 
 	}
