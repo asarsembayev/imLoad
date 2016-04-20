@@ -31,7 +31,7 @@ import javax.swing.*;
 
 
 public class Test extends JFrame implements ActionListener, KeyEventDispatcher, MouseListener{
-	String imString = "src/img/3.png";
+	String imString = "src/img/Maze2.png";
 	
 	JFrame frame;
 	public Panel rootPanel = new Panel(); //previously m_RootPane
@@ -51,9 +51,11 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	private List<Point2D> wallOfset = new ArrayList<Point2D>();
 	private List<Point2D> openList = new ArrayList<Point2D>();
 	
+	private List<Point> wallOfset2 = new ArrayList<Point>();	
+	
 	public List<Point2D>pathListMain = new ArrayList<Point2D>();
 	
-	private int offsetDist = 10;
+	private int offsetDist = 2;
 	
 	//private static DrawingObjects object = new DrawingObjects();
 	private int xFinish;
@@ -80,6 +82,8 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	private Test() throws IOException{
 		bImage = ImageIO.read(new File(imString));
 		bImageWidth = bImage.getWidth(); bImageHeight = bImage.getHeight();
+		putInWallsArray();
+		createWallOfset();
 		frame = new JFrame();
 		
 		//Here Im creating the JFrame
@@ -89,10 +93,11 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//end of JFrame
 	
-		initUI();
+
 		
-		putInWallsArray();
-		createWallOfset();
+
+		initUI();
+		//exportImage(); //delete after
 		makeTheOpenList();
 		//countDist();	//FOR ASTAR
 		//addMouseListener(this);
@@ -154,22 +159,162 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	}
 	
 	private List<Point2D> putInWallsArray(){
+		int white = 0; int black = 0;		
 		for(int x = 0; x < bImageWidth; x++){
 			for(int y = 0; y <bImageHeight; y++){
 				Point p = new Point(x, y);
 				int rgb = getRgb(x, y);
 				if(rgb==0){
 					wallPositions.add(p);
+					black++;
 				}
 			}
 		}
-		//System.out.println("wallPositions " + wallPositions);
 		return wallPositions;
 	}
 	
 
+	private List<Point> createWallOfset2(){
+		for(int i = 0; i < offsetDist; i++){
+			for(int j = 0; j<wallPositions.size(); j++){
+				
+			}
+		}
+		return wallOfset2;
+	}
 	private List<Point2D> createWallOfset(){
-		for(int i = 0; i<wallPositions.size();i++){
+		System.out.println("started ");
+		long currentTime = System.currentTimeMillis();
+		
+		List<Point2D> temporaryList = wallPositions;
+		int newRGB = 241;
+		int offsetDistance = 0;
+		for(int j = 0; j<offsetDist; j++){
+			offsetDistance++; //increment offsetDist each time until it reaches final
+			// loop through temporary list
+			for(int i = 0; i<temporaryList.size(); i++){
+				Point2D p = temporaryList.get(i);
+				Point2D neigh = this.getLocation();
+				int x = (int) p.getX(); int y = (int)p.getY();
+				int isXzero = 0; int isYzero = 0; int isXborder = bImageWidth - 1; int isYborder = bImageHeight - 1;
+				//this part is for the borders
+				if(x==isXzero){
+					if(y!=isYzero && y!=isYborder){
+						neigh.setLocation(x + offsetDistance, y);
+						if(!wallOfset.contains(neigh) && !temporaryList.contains(neigh)){
+							wallOfset.add(neigh);
+							int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
+							bImage.setRGB(nX, nY, newRGB);
+						}
+						
+					}
+				}
+				
+				if(x == isXborder){
+					if(y!=isYzero && y!=isYborder){
+						neigh.setLocation(x - offsetDistance, y);
+						if(!wallOfset.contains(neigh) && !temporaryList.contains(neigh)){
+							wallOfset.add(neigh);
+							int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
+							bImage.setRGB(nX, nY, newRGB);
+						}	
+					}					
+				}
+				
+				if(y == isYzero){
+					if(x!=isYzero && x!=isYborder){
+						neigh.setLocation(x, y + offsetDistance);
+						if(!wallOfset.contains(neigh) && !temporaryList.contains(neigh)){
+							wallOfset.add(neigh);
+							int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
+							bImage.setRGB(nX, nY, newRGB);
+						}	
+					}					
+				}
+				
+				if(y == isYborder){
+					if(x!=isYzero && x!=isYborder){
+						neigh.setLocation(x, y - offsetDistance);
+						if(!wallOfset.contains(neigh) && !temporaryList.contains(neigh)){
+							wallOfset.add(neigh);
+							int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
+							bImage.setRGB(nX, nY, newRGB);
+						}	
+					}					
+				}
+				//this part is the end of the borders
+				
+				//if x and y are not zeros or borders
+				if(x!=isXzero && x!=isXborder && y!=isYzero && y!=isYborder
+						&& (bImageWidth - x)>offsetDistance && (bImageHeight - y)>offsetDistance )
+				{
+					int blackMaybe = 240;
+					Point2D neigh1 = this.getLocation();
+					neigh1.setLocation(x, y - offsetDistance);
+					System.out.println("x y " + x + " " + y);
+					int n1RGB = getRgb(x, y - offsetDistance);
+					if(!wallOfset.contains(neigh1) && !wallPositions.contains(neigh1) && n1RGB > blackMaybe){
+						wallOfset.add(neigh1);
+						bImage.setRGB(x, y - offsetDistance, newRGB);
+					}
+					Point2D neigh2 = this.getLocation();
+					neigh2.setLocation(x + offsetDistance, y - offsetDistance);
+					int n2RGB = getRgb(x + offsetDistance, y - offsetDistance);
+					if(!wallOfset.contains(neigh2) && !wallPositions.contains(neigh2) && n2RGB > blackMaybe){
+						wallOfset.add(neigh2);
+						bImage.setRGB(x + offsetDistance, y - offsetDistance, newRGB);
+					}
+					Point2D neigh3 = this.getLocation();
+					neigh3.setLocation(x + offsetDistance, y);
+					int n3RGB = getRgb(x + offsetDistance, y);
+					if(!wallOfset.contains(neigh3) && !wallPositions.contains(neigh3) && n3RGB > blackMaybe){
+						wallOfset.add(neigh3);
+						bImage.setRGB(x + offsetDistance, y, newRGB);
+					}
+					Point2D neigh4 = this.getLocation();
+					neigh4.setLocation(x + offsetDistance, y + offsetDistance);
+					int n4RGB = getRgb(x + offsetDistance, y + offsetDistance);
+					if(!wallOfset.contains(neigh4) && !wallPositions.contains(neigh4) && n4RGB > blackMaybe){
+						wallOfset.add(neigh4);
+						bImage.setRGB(x + offsetDistance, y + offsetDistance, newRGB);
+					}
+					Point2D neigh5 = this.getLocation();
+					neigh5.setLocation(x, y + offsetDistance);
+					int n5RGB = getRgb(x, y + offsetDistance);
+					if(!wallOfset.contains(neigh5) && !wallPositions.contains(neigh5) && n5RGB > blackMaybe){
+						wallOfset.add(neigh5);
+						bImage.setRGB(x, y + offsetDistance, newRGB);
+					}
+					Point2D neigh6 = this.getLocation();
+					neigh6.setLocation(x - offsetDistance, y + offsetDistance);
+					int n6RGB = getRgb(x - offsetDistance, y + offsetDistance);
+					if(!wallOfset.contains(neigh6) && !wallPositions.contains(neigh6) && n6RGB > blackMaybe){
+						wallOfset.add(neigh6);
+						bImage.setRGB(x - offsetDistance, y + offsetDistance, newRGB);
+					}
+					Point2D neigh7 = this.getLocation();
+					neigh7.setLocation(x - offsetDistance, y);
+					int n7RGB = getRgb(x - offsetDistance, y);
+					if(!wallOfset.contains(neigh7) && !wallPositions.contains(neigh7) && n7RGB > blackMaybe){
+						wallOfset.add(neigh7);
+						bImage.setRGB(x - offsetDistance, y, newRGB);
+					}
+					Point2D neigh8 = this.getLocation();
+					neigh8.setLocation(x - offsetDistance, y - offsetDistance);
+					int n8RGB = getRgb(x - offsetDistance, y - offsetDistance);
+					if(!wallOfset.contains(neigh8) && !wallPositions.contains(neigh8) && n8RGB > blackMaybe){
+						wallOfset.add(neigh8);
+						bImage.setRGB(x - offsetDistance, y - offsetDistance, newRGB);
+					}
+				}
+
+			}// end if loop through temporary list
+		}
+		System.out.println("finished ");
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - currentTime;
+		System.out.println("time spent for exec wallOfset " + totalTime);
+/*		for(int i = 0; i<wallPositions.size();i++){
 			int newRGB = 240;
 			Point2D p = wallPositions.get(i);
 			Point2D neigh = this.getLocation();
@@ -182,7 +327,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					//bImage.setRGB(nX, nY, newRGB);
+					bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			
@@ -192,7 +337,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					//bImage.setRGB(nX, nY, newRGB);
+					bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			
@@ -202,7 +347,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					//bImage.setRGB(nX, nY, newRGB);
+					bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			
@@ -212,7 +357,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 				if(!wallOfset.contains(neigh) && !wallPositions.contains(neigh)){
 					wallOfset.add(neigh);
 					int nX = (int) neigh.getX(); int nY = (int)neigh.getY(); 
-					//bImage.setRGB(nX, nY, newRGB);
+					bImage.setRGB(nX, nY, newRGB);
 				}
 			}
 			//this part is the end of the borders
@@ -223,62 +368,63 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 			int n1RGB = getRgb(x, y - offsetDist);
 			if(!wallOfset.contains(neigh1) && !wallPositions.contains(neigh1) && n1RGB > blackMaybe){
 				wallOfset.add(neigh1);
-				//bImage.setRGB(x, y - offsetDist, newRGB);
+				bImage.setRGB(x, y - offsetDist, newRGB);
 			}
 			Point2D neigh2 = this.getLocation();
 			neigh2.setLocation(x + offsetDist, y - offsetDist);
 			int n2RGB = getRgb(x + offsetDist, y - offsetDist);
 			if(!wallOfset.contains(neigh2) && !wallPositions.contains(neigh2) && n2RGB > blackMaybe){
 				wallOfset.add(neigh2);
-				//bImage.setRGB(x + offsetDist, y - offsetDist, newRGB);
+				bImage.setRGB(x + offsetDist, y - offsetDist, newRGB);
 			}
 			Point2D neigh3 = this.getLocation();
 			neigh3.setLocation(x + offsetDist, y);
 			int n3RGB = getRgb(x + offsetDist, y);
 			if(!wallOfset.contains(neigh3) && !wallPositions.contains(neigh3) && n3RGB > blackMaybe){
 				wallOfset.add(neigh3);
-				//bImage.setRGB(x + offsetDist, y, newRGB);
+				bImage.setRGB(x + offsetDist, y, newRGB);
 			}
 			Point2D neigh4 = this.getLocation();
 			neigh4.setLocation(x + offsetDist, y + offsetDist);
 			int n4RGB = getRgb(x + offsetDist, y + offsetDist);
 			if(!wallOfset.contains(neigh4) && !wallPositions.contains(neigh4) && n4RGB > blackMaybe){
 				wallOfset.add(neigh4);
-				//bImage.setRGB(x + offsetDist, y + offsetDist, newRGB);
+				bImage.setRGB(x + offsetDist, y + offsetDist, newRGB);
 			}
 			Point2D neigh5 = this.getLocation();
 			neigh5.setLocation(x, y + offsetDist);
 			int n5RGB = getRgb(x, y + offsetDist);
 			if(!wallOfset.contains(neigh5) && !wallPositions.contains(neigh5) && n5RGB > blackMaybe){
 				wallOfset.add(neigh5);
-				//bImage.setRGB(x, y + offsetDist, newRGB);
+				bImage.setRGB(x, y + offsetDist, newRGB);
 			}
 			Point2D neigh6 = this.getLocation();
 			neigh6.setLocation(x - offsetDist, y + offsetDist);
 			int n6RGB = getRgb(x - offsetDist, y + offsetDist);
 			if(!wallOfset.contains(neigh6) && !wallPositions.contains(neigh6) && n6RGB > blackMaybe){
 				wallOfset.add(neigh6);
-				//bImage.setRGB(x - offsetDist, y + offsetDist, newRGB);
+				bImage.setRGB(x - offsetDist, y + offsetDist, newRGB);
 			}
 			Point2D neigh7 = this.getLocation();
 			neigh7.setLocation(x - offsetDist, y);
 			int n7RGB = getRgb(x - offsetDist, y);
 			if(!wallOfset.contains(neigh7) && !wallPositions.contains(neigh7) && n7RGB > blackMaybe){
 				wallOfset.add(neigh7);
-				//bImage.setRGB(x - offsetDist, y, newRGB);
+				bImage.setRGB(x - offsetDist, y, newRGB);
 			}
 			Point2D neigh8 = this.getLocation();
 			neigh8.setLocation(x - offsetDist, y - offsetDist);
 			int n8RGB = getRgb(x - offsetDist, y - offsetDist);
 			if(!wallOfset.contains(neigh8) && !wallPositions.contains(neigh8) && n8RGB > blackMaybe){
 				wallOfset.add(neigh8);
-				//bImage.setRGB(x - offsetDist, y - offsetDist, newRGB);
+				bImage.setRGB(x - offsetDist, y - offsetDist, newRGB);
 			}
 		}
-		//System.out.println("wallpoitions size " + wallPositions.size());
+*/		//System.out.println("wallpoitions size " + wallPositions.size());
 		//System.out.println("walloffset size " + wallOfset.size());
 		//System.out.println("wallOfset "  + wallOfset);
-		return wallOfset;		
+		return wallOfset;	
+		
 	}
 	
 	private List<Point2D> makeTheOpenList(){
@@ -369,18 +515,18 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		if (e.getSource() == this.timer){		
 			if (this.robot.isStopped()) {
 				return;
-			}
+			}//for moving freely uncomment the code bellow
+			this.robot.move();
 			
-			//for moving freely uncomment the code bellow
-			//this.robot.move;
 			
-			//if you want to move by the AStar you should use the code bellow
+			
+			/*//if you want to move by the AStar you should use the code bellow
 			for(int i=0; i<pathListMain.size(); i++){
 				this.robot.move((int) pathListMain.get(i).getX(), (int) pathListMain.get(i).getY());
 				System.out.println("X " + pathListMain.get(i).getX() + " Y " + pathListMain.get(i).getY());
 				if(i == pathListMain.size())break;
 			}this.robot.stop();
-
+*/
 			boolean bCrashed = false;			
 			
 			//BEGINNING OF MY WAY OF WALKING
@@ -543,12 +689,18 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	
 	public void drawPath2(List<Point2D> quadPathList){
 		Graphics2D g2 = bImage.createGraphics();
-		g2.setColor(Color.RED);		
+		g2.setColor(Color.RED);
+		g2.drawLine(robotLocation.x, robotLocation.y, (int)quadPathList.get(0).getX(), (int)quadPathList.get(0).getY());
+		int sizeofList = quadPathList.size();
 		for(int i=0; i<quadPathList.size(); i++){
 			int x = (int) quadPathList.get(i).getX(); int y = (int) quadPathList.get(i).getY();
+			if(i == sizeofList -1) break;
+			int xNext = (int) quadPathList.get(i+1).getX(); int yNext = (int) quadPathList.get(i+1).getY();
 			bImage.setRGB(x, y, 180);
-			g2.drawLine(x, y, xFinish, yFinish);
+			g2.drawLine(x, y, xNext, yNext);
 		}
+		int xLast = (int) quadPathList.get(sizeofList-1).getX(); int yLast = (int) quadPathList.get(sizeofList-1).getY();
+		g2.drawLine(xLast, yLast, finishPoint.x, finishPoint.y);
 		exportImage2();
 	}
 	
@@ -579,28 +731,36 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		}
 
 	}
-	
+
+	//	I EITHER USE CLICKED OR RELEASED
 	@SuppressWarnings("deprecation")
 	@Override
 	public void mousePressed(MouseEvent paramMouseEvent) {
 		//THIS IS A METHOD BODY TODO Auto-generated method stub
-		int clickNum = paramMouseEvent.getClickCount();
+		/*int clickNum = paramMouseEvent.getClickCount();
 		if(clickNum == 1 && numFinalPoints == 0){
 			xFinish = paramMouseEvent.getX(); yFinish = paramMouseEvent.getY();
 			addFinal();
-			//drawLineFromStartToFinish();
+			drawLineFromStartToFinish();
 			numFinalPoints ++;
 			clickNum++;
 			aStar(robotLocation, finishPoint);
 			quadrification();
-		}
-
+		}*/
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent paramMouseEvent) {
 		//THIS IS A METHOD BODY TODO Auto-generated method stub
-		
+		int clickNum = paramMouseEvent.getClickCount();
+		if(clickNum == 1 && numFinalPoints == 0){
+		xFinish = paramMouseEvent.getX(); yFinish = paramMouseEvent.getY();
+		addFinal();	
+		numFinalPoints ++;
+		clickNum++;
+		aStar(robotLocation, finishPoint);
+		quadrification();
+		}
 	}
 
 	@Override

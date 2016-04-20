@@ -97,17 +97,28 @@ public class TestRobot
 		
 		setBounds(x, y, w, h);
 	}
-	
+	//for moving from start to finish directly
 	public void move(int d, int e)
 	{
-		//int x = getX() + this.m_nStep * this.m_nXDir;
-		
+		//from start to finish
 		int x = d + this.m_nStep * this.m_nXDir;
 		int y = e + this.m_nStep * this.m_nYDir;
-		//int y = getY() + this.m_nStep * this.m_nYDir;
+		
 		int w = getWidth();
 		int h = getHeight();
 		
 		setBounds(x, y, w, h);
 	}
+	
+	//for moving free
+	public void move()
+	{
+		int x = getX() + this.m_nStep * this.m_nXDir;
+		int y = getY() + this.m_nStep * this.m_nYDir;
+		int w = getWidth();
+		int h = getHeight();
+		
+		setBounds(x, y, w, h);
+	}
+	
 }

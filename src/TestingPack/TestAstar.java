@@ -25,6 +25,7 @@ public class TestAstar {
 	ArrayList<Point> tempNeighbors = new ArrayList<>();
 	//constructor
 	public TestAstar(Point robotLocation, Point finishPoint, List<Point2D> wallOfset){
+		long currentTime = System.currentTimeMillis();
 		robotPosX = robotLocation.x; robotPosY = robotLocation.y;
 		lastPoint = robotLocation;
 		xFinish = finishPoint.x; yFinish = finishPoint.y;
@@ -114,6 +115,11 @@ public class TestAstar {
 				}
 				tempNeighbors.clear(); tempFvalues.clear(); tempHvalues.clear();
 			}
+		
+		
+		long endTime   = System.currentTimeMillis();
+		long totalTime = endTime - currentTime;
+		System.out.println("time spent for exec Astar " + totalTime);
 }
 	
 	private double findMin(ArrayList<Double> tempFvalues){
