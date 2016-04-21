@@ -31,7 +31,7 @@ import javax.swing.*;
 
 
 public class Test extends JFrame implements ActionListener, KeyEventDispatcher, MouseListener{
-	String imString = "src/img/Maze2.png";
+	String imString = "src/img/3.png";
 	
 	JFrame frame;
 	public Panel rootPanel = new Panel(); //previously m_RootPane
@@ -49,11 +49,10 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	int p = 100;
 	private List<Point2D> wallPositions = new ArrayList<Point2D>(); 
 	private List<Point2D> wallOfset = new ArrayList<Point2D>();
-	private List<Point2D> openList = new ArrayList<Point2D>();
-	
+	private List<Point2D> openList = new ArrayList<Point2D>();	
 	private List<Point2D> wallOfset2 = new ArrayList<Point2D>();	
-	
 	public List<Point2D>pathListMain = new ArrayList<Point2D>();
+	List<Point2D> temporaryList = new ArrayList<Point2D>();
 	
 	private int offsetDist = 3;
 	
@@ -97,8 +96,8 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		
 
 		initUI();
-		exportImage(); //delete after
-		makeTheOpenList();
+		//exportImage(); //delete after
+		//makeTheOpenList();
 		//countDist();	//FOR ASTAR
 		//addMouseListener(this);
 		
@@ -159,18 +158,16 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	}
 	
 	private List<Point2D> putInWallsArray(){
-		int white = 0; int black = 0;		
 		for(int x = 0; x < bImageWidth; x++){
 			for(int y = 0; y <bImageHeight; y++){
 				Point p = new Point(x, y);
 				int rgb = getRgb(x, y);
 				if(rgb==0){
 					wallPositions.add(p);
-					black++;
 				}
 			}
 		}
-		return wallPositions;
+		return wallPositions;		
 	}
 	
 
@@ -179,7 +176,8 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		System.out.println("started ");
 		long currentTime = System.currentTimeMillis();
 		
-		List<Point2D> temporaryList = wallPositions;
+
+		temporaryList.addAll(wallPositions);
 		int newRGB = 241;
 		int offsetDistance = 0;
 		for(int j = 0; j<offsetDist; j++){
@@ -684,7 +682,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	}
 	
 	public void quadrification(){
-		TestQuadrification tq = new TestQuadrification(bImage, openList, wallPositions, wallOfset, robSize, robotLocation, finishPoint);
+		TestQuadrification tq = new TestQuadrification(bImage, wallPositions, wallOfset, robSize, robotLocation, finishPoint);
 		drawPath2(tq.quadPathList);
 	}
 	
@@ -759,7 +757,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		addFinal();	
 		numFinalPoints ++;
 		clickNum++;
-		aStar(robotLocation, finishPoint);
+		//aStar(robotLocation, finishPoint);
 		quadrification();
 		}
 	}

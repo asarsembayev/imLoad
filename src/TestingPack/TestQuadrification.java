@@ -12,14 +12,14 @@ import java.util.List;
 public class TestQuadrification {
 	
 	int cell_step = 0;
-	int rgb = 245;
+	int rgb = 0;
 	
 	Point lastPoint;
 	Point neigh1, neigh2, neigh3, neigh4, neigh5, neigh6, neigh7, neigh8;
 		
 	List<Point2D>quadList = new ArrayList<Point2D>();
 	
-	List<Point2D>openList; List<Point2D>closedList = new ArrayList<Point2D>(); public List<Point2D>quadPathList = new ArrayList<Point2D>();
+	List<Point2D>closedList = new ArrayList<Point2D>(); public List<Point2D>quadPathList = new ArrayList<Point2D>();
 	HashMap<Double, Point> temporaryFValsOfNeighbors = new HashMap<>(); HashMap<Point, Double> temporaryGvalsOfNeighbors = new HashMap<>();
 	
 	Double[]hValsArr = new Double[8]; Double[]fValsArr = new Double[8]; Point[]neighs = new Point[8]; //?
@@ -35,7 +35,7 @@ public class TestQuadrification {
 	ArrayList<Point> tempNeighbors = new ArrayList<>();
 	
 
-	public TestQuadrification(BufferedImage bImage, List<Point2D> openList, List<Point2D> wallPositions, 
+	public TestQuadrification(BufferedImage bImage, List<Point2D> wallPositions, 
 			List<Point2D> wallOfset, Dimension robSize, Point robotLocation, Point finishPoint) {
 		//THIS IS CONSTRUCTOR TODO Auto-generated constructor stub
 		long currentTime = System.currentTimeMillis();
@@ -46,11 +46,11 @@ public class TestQuadrification {
 		cell_step = rWidth;
 		for(int i = 0; i < bImage.getWidth(); i++){
 			for(int j = 0; j < bImage.getHeight(); j++){
-				if(i!=0 && j != 0 && i != imageBorderW && j!=imageBorderH ){
+				Point2D p = new Point();
+				p.setLocation(i, j);
+				if(i!=0 && j != 0 && i != imageBorderW && j!=imageBorderH && !wallPositions.contains(p)){
 					if(i%cell_step==0){
 						if(j%cell_step==0){
-							Point2D p = new Point();
-							p.setLocation(i, j);
 							quadList.add(p);
 							bImage.setRGB(i, j, rgb);
 						}
@@ -58,10 +58,10 @@ public class TestQuadrification {
 				}
 			}
 		}
-		//System.out.println("Cells of quadList are " + quadList.toString());
+		System.out.println("Cells of quadList are " + quadList.toString());
 		//return bImage; 
 		
-		chechTheNeighbors(openList, robotLocation, finishPoint, wallOfset, wallPositions);
+		chechTheNeighbors(robotLocation, finishPoint, wallOfset, wallPositions);
 		
 		long endTime   = System.currentTimeMillis();
 		long totalTime = endTime - currentTime;
@@ -72,7 +72,7 @@ public class TestQuadrification {
 	
 	//constructor
 	
-	private void chechTheNeighbors(List<Point2D> openList,Point robotLocation, Point finishPoint, List<Point2D> wallOfset, List<Point2D> wallPositions){
+	private void chechTheNeighbors(Point robotLocation, Point finishPoint, List<Point2D> wallOfset, List<Point2D> wallPositions){
 		robotPosX = robotLocation.x; robotPosY = robotLocation.y;
 		lastPoint = robotLocation;
 		xFinish = finishPoint.x; yFinish = finishPoint.y;
