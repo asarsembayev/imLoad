@@ -43,7 +43,7 @@ public class TestQuadrification {
 		Dimension robDim = robSize;
 		int imageBorderW = bImage.getWidth(); int imageBorderH = bImage.getHeight();
 		int rWidth = Math.round((robDim.width + 9)/10 * 10);	int rheight = Math.round((robDim.height + 9)/10 * 10); //robots dimensions
-		cell_step = rWidth;
+		cell_step = 3;
 		for(int i = 0; i < bImage.getWidth(); i++){
 			for(int j = 0; j < bImage.getHeight(); j++){
 				Point2D p = new Point();
@@ -97,6 +97,7 @@ public class TestQuadrification {
 				
 				 //double min = neighVals[0]; double max = neighVals[0];				
 
+				//with the offset
 				for(int i=0; i < neighs.length; i++){
 					if(!wallOfset.contains(neighs[i]) && !wallPositions.contains(neighs[i])){
 						tempNeighbors.add(neighs[i]);
@@ -104,6 +105,15 @@ public class TestQuadrification {
 						tempFvalues.add(fValsArr[i]);
 					}
 				}
+				
+				//without the offset
+/*				for(int i=0; i < neighs.length; i++){
+					if(!wallPositions.contains(neighs[i])){
+						tempNeighbors.add(neighs[i]);
+						tempHvalues.add(hValsArr[i]);
+						tempFvalues.add(fValsArr[i]);
+					}
+				}*/
 				
 				findMin(tempFvalues);
 				min = tempFvalues.get(minInd);

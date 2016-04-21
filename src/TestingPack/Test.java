@@ -675,8 +675,8 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		finishPoint = new Point(xFinish, yFinish);
 	}
 	
-	public void aStar(Point robotLocation, Point finishPoint){
-		TestAstar ta = new TestAstar(robotLocation, finishPoint, wallOfset);
+	public void aStar(Point robotLocation, Point finishPoint, List<Point2D> wallPositions){
+		TestAstar ta = new TestAstar(robotLocation, finishPoint, wallOfset, wallPositions);
 		pathListMain = ta.pathList;
 		drawPath(ta.pathList);
 	}
@@ -716,7 +716,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 	public void drawPath(List<Point2D> pathList){
 		for(int i=0; i<pathList.size(); i++){
 			int x = (int) pathList.get(i).getX(); int y = (int) pathList.get(i).getY();
-			bImage.setRGB(x, y, 30);
+			bImage.setRGB(x, y, 240);
 		}
 		exportImage();
 	}
@@ -757,7 +757,7 @@ public class Test extends JFrame implements ActionListener, KeyEventDispatcher, 
 		addFinal();	
 		numFinalPoints ++;
 		clickNum++;
-		//aStar(robotLocation, finishPoint);
+		aStar(robotLocation, finishPoint, wallPositions);
 		quadrification();
 		}
 	}

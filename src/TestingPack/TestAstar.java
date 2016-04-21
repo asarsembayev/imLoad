@@ -24,7 +24,7 @@ public class TestAstar {
 	ArrayList<Double> tempHvalues = new ArrayList<>();
 	ArrayList<Point> tempNeighbors = new ArrayList<>();
 	//constructor
-	public TestAstar(Point robotLocation, Point finishPoint, List<Point2D> wallOfset){
+	public TestAstar(Point robotLocation, Point finishPoint, List<Point2D> wallOfset, List<Point2D> wallPositions){
 		long currentTime = System.currentTimeMillis();
 		robotPosX = robotLocation.x; robotPosY = robotLocation.y;
 		lastPoint = robotLocation;
@@ -56,6 +56,14 @@ public class TestAstar {
 						tempFvalues.add(fValsArr[i]);
 					}
 				}
+				
+/*				for(int i=0; i < neighs.length; i++){
+					if(!wallPositions.contains(neighs[i])){
+						tempNeighbors.add(neighs[i]);
+						tempHvalues.add(hValsArr[i]);
+						tempFvalues.add(fValsArr[i]);
+					}
+				}*/
 
 				findMin(tempFvalues);
 				min = tempFvalues.get(minInd);
